@@ -1,0 +1,10 @@
+Package: getais
+Type: Package
+Title: This Package Processes AIS Data
+Version: 0.1.0
+Author: Eric Ward
+Maintainer: The package maintainer <eric.ward@noaa.gov>
+Description: Downloads and processes AIS data, subsetting observations closest to user-specified times.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
