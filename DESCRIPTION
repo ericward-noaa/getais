@@ -8,3 +8,7 @@ Description: Downloads and processes AIS data, subsetting observations closest t
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Depends:
+    rgdal,
+    dplyr,
+    lubridate

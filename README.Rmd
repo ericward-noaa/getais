@@ -21,9 +21,12 @@ The getais R package is simply a data processing package, meant to download and 
 
 You can install the development version of the package with:
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 # install.packages("devtools")
-devtools::install_github("eric-ward/getais")
+if("getais" %in% rownames(installed.packages()) == FALSE) {
+  devtools::install_github("eric-ward/getais")
+}
+library(getais)
 ```
     
 ## An example processing script
@@ -31,11 +34,6 @@ devtools::install_github("eric-ward/getais")
 Create data frame for all combinations
 
 ```{r load}
-library(dplyr)
-library(lubridate)
-library(getais)
-library(rgdal)
-
 if (!file.exists("filtered")) dir.create("filtered")
 
 all_combos = expand.grid("zone"=1:19,"year"=2009:2014,"month"=1:12)
@@ -49,7 +47,7 @@ subset = all_combos[which(all_combos$zone==1 & all_combos$month==12),]
 
 Process the data for these combinations of months / years / zones. The user can also specify the 'hours' argument, which finds observations from each vessel that are closest to that time. For example, if observations closest to noon each day are wanted, specify 12, if observations every 6 hours are wanted, specify c(0, 6, 12, 18). Here we'll just get records closest to 4am and noon,
 
-```{r process, cache=FALSE}
+```{r process, cache=FALSE, results='hide'}
 process_ais(df = subset, hours = c(4,12))
 ```
 

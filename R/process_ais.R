@@ -28,32 +28,32 @@ for(i in 1:nrow(df)) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"_",month[df$month[i]],"_",df$year[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast")
+      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
     }
     if(df$year[i] == 2011) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb.zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast")
+      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
     }
     if(df$year[i] == 2011) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb.zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast")
+      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
     }
     if(df$year[i] %in% c(2011,2012,2013)) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb.zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      if(df$year[i] %in% c(2011,2012)) d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast")
-      if(df$year[i] == 2013) d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"))
+      if(df$year[i] %in% c(2011,2012)) d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
+      if(df$year[i] == 2013) d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
     }
     if(df$year[i] == 2014) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"))
+      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
     }
     unlink("temp.zip")
 
@@ -87,7 +87,6 @@ for(i in 1:nrow(df)) {
     }
     # trash the temp directory that was created
     unlink(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"), recursive=TRUE)
-
   }
 
 }
