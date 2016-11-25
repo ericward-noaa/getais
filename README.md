@@ -29,6 +29,15 @@ As an example, we'll only use data from December and UTM Zone 1.
 
 ``` r
 subset = all_combos[which(all_combos$zone==1 & all_combos$month==12),]
+
+head(subset)
+#>      zone year month
+#> 1255    1 2009    12
+#> 1274    1 2010    12
+#> 1293    1 2011    12
+#> 1312    1 2012    12
+#> 1331    1 2013    12
+#> 1350    1 2014    12
 ```
 
 Process the data for these combinations of months / years / zones. The user can also specify the 'hours' argument, which finds observations from each vessel that are closest to that time. For example, if observations closest to noon each day are wanted, specify 12, if observations every 6 hours are wanted, specify c(0, 6, 12, 18). Here we'll just get records closest to 4am and noon,
