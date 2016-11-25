@@ -21,7 +21,7 @@ The getais R package is simply a data processing package, meant to download and 
 
 You can install the development version of the package with:
 
-```{r, eval=TRUE}
+```{r, eval=TRUE, results='hide'}
 # install.packages("devtools")
 if("getais" %in% rownames(installed.packages()) == FALSE) {
   devtools::install_github("eric-ward/getais")
