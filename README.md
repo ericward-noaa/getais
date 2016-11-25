@@ -45,3 +45,11 @@ Process the data for these combinations of months / years / zones. The user can 
 ``` r
 process_ais(df = subset, hours = c(4,12))
 ```
+
+And now we have a few hundered records per file (instead of &gt; 50000) in the 'filtered' folder,
+
+``` r
+dir("filtered")
+#> [1] "Zone1_12_2009.csv" "Zone1_12_2010.csv" "Zone1_12_2011.csv"
+#> [4] "Zone1_12_2012.csv" "Zone1_12_2013.csv" "Zone1_12_2014.csv"
+```
