@@ -53,3 +53,9 @@ Process the data for these combinations of months / years / zones. The user can 
 process_ais(df = subset, hours = c(4,12))
 ```
 
+And now we have a few hundered records per file (instead of > 50000) in the 'filtered' folder,
+
+```{r}
+getwd("filtered")
+```
+
