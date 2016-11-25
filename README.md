@@ -12,30 +12,6 @@ if("getais" %in% rownames(installed.packages()) == FALSE) {
   devtools::install_github("eric-ward/getais")
 }
 library(getais)
-#> Loading required package: rgdal
-#> Loading required package: sp
-#> rgdal: version: 1.1-10, (SVN revision 622)
-#>  Geospatial Data Abstraction Library extensions to R successfully loaded
-#>  Loaded GDAL runtime: GDAL 1.11.4, released 2016/01/25
-#>  Path to GDAL shared files: /Users/eric.ward/Library/R/3.3/library/rgdal/gdal
-#>  Loaded PROJ.4 runtime: Rel. 4.9.1, 04 March 2015, [PJ_VERSION: 491]
-#>  Path to PROJ.4 shared files: /Users/eric.ward/Library/R/3.3/library/rgdal/proj
-#>  Linking to sp version: 1.2-3
-#> Loading required package: dplyr
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-#> Loading required package: lubridate
-#> 
-#> Attaching package: 'lubridate'
-#> The following object is masked from 'package:base':
-#> 
-#>     date
 ```
 
 An example processing script
