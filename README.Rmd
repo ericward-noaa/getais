@@ -39,18 +39,18 @@ if (!file.exists("filtered")) dir.create("filtered")
 all_combos = expand.grid("zone"=1:19,"year"=2009:2014,"month"=1:12)
 ```
 
-As an example, we'll only use data from December and UTM Zone 1.
+As an example, we'll only use data from December and UTM Zone 3.
 
 ```{r filter}
-subset = all_combos[which(all_combos$zone==1 & all_combos$month==12),]
+subset = all_combos[which(all_combos$zone==3 & all_combos$month==12),]
 
 head(subset)
 ```
 
-Process the data for these combinations of months / years / zones. The user can also specify the 'hours' argument, which finds observations from each vessel that are closest to that time. For example, if observations closest to noon each day are wanted, specify 12, if observations every 6 hours are wanted, specify c(0, 6, 12, 18). Here we'll just get records closest to 4am and noon,
+Process the data for these combinations of months / years / zones. The user can also specify the 'every_minutes' argument, which finds observations from each vessel that are closest to that time. For example, if we wanted observations nearest to every 30 minutes, we'd use
 
 ```{r process, cache=FALSE, results='hide'}
-process_ais(df = subset, hours = c(4,12))
+downsample_ais(df = subset, every_minutes = 30)
 ```
 
 And now we have a few hundered records per file (instead of > 50000) in the 'filtered' folder,
