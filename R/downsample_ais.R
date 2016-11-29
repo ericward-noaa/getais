@@ -79,12 +79,13 @@ for(i in 1:nrow(df)) {
     dat = select(dat, -BaseDateTime_round, -minutes, -time_chunk, -diff_1, -diff_2, -time_1)
 
     # create interval: month: day to group_by on
-    dat$chunk = paste0(month(dat$BaseDateTime),":",day(dat$BaseDateTime),":",dat$interval)
+    dat$chunk = as.numeric(as.factor(paste0(month(dat$BaseDateTime),":",day(dat$BaseDateTime),":",dat$interval)))
     dat$BaseDateTime = as.character(dat$BaseDateTime) # needed to keep dplyr from throwing error
 
     dat = group_by(dat, MMSI, chunk) %>%
       mutate(mintime = ifelse(min_timediff == min(min_timediff), 1, 0)) %>%
       filter(mintime == 1) %>%
+      ungroup %>%
       select(-mintime, -chunk)
 
     if(nrow(dat) > 0) {
