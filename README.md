@@ -40,18 +40,32 @@ head(subset)
 #> 1352    3 2014    12
 ```
 
-Process the data for these combinations of months / years / zones. The user can also specify the 'every\_minutes' argument, which finds observations from each vessel that are closest to that time. For example, if we wanted observations nearest to every 30 minutes, we'd use
+Process the data for these combinations of months / years / zones. The user can also specify the status codes to keep, which defaults to
+
+``` r
+status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+```
+
+More details here: \[link\]<https://help.marinetraffic.com/hc/en-us/articles/203990998-What-is-the-significance-of-the-AIS-Navigational-Status-Values-#>'
+
+The downsample\_ais() function also takes the 'every\_minutes' argument, which finds observations from each vessel that are closest to that time. For example, if we wanted observations nearest to every 30 minutes, we'd use
 
 ``` r
 downsample_ais(df = subset, every_minutes = 30)
+#> Adding missing grouping variables: `chunk`
+#> Adding missing grouping variables: `chunk`
+#> Adding missing grouping variables: `chunk`
+#> Adding missing grouping variables: `chunk`
+#> Adding missing grouping variables: `chunk`
+#> Adding missing grouping variables: `chunk`
 ```
 
-And now we have a few hundered records per file (instead of &gt; 50000) in the 'filtered' folder,
+And now we have a few hundered or thousand records per file (instead of &gt; 50000) in the 'filtered' folder,
 
 ``` r
 dir("filtered")
-#>  [1] "Zone1_12_2009.csv" "Zone1_12_2010.csv" "Zone1_12_2011.csv"
-#>  [4] "Zone1_12_2012.csv" "Zone1_12_2013.csv" "Zone1_12_2014.csv"
-#>  [7] "Zone3_12_2009.csv" "Zone3_12_2010.csv" "Zone3_12_2011.csv"
-#> [10] "Zone3_12_2012.csv" "Zone3_12_2013.csv" "Zone3_12_2014.csv"
+#> [1] "Zone3_12_2009.csv" "Zone3_12_2010.csv" "Zone3_12_2011.csv"
+#> [4] "Zone3_12_2012.csv" "Zone3_12_2013.csv" "Zone3_12_2014.csv"
 ```
+
+Using the 30-minute sampling of zone 3 for example, each year has &lt; 10000 records.

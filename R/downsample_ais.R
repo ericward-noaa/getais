@@ -85,7 +85,7 @@ for(i in 1:nrow(df)) {
     dat = group_by(dat, MMSI, chunk) %>%
       mutate(mintime = ifelse(min_timediff == min(min_timediff), 1, 0)) %>%
       filter(mintime == 1) %>%
-      select(-mintime)
+      select(-mintime, -chunk)
 
     if(nrow(dat) > 0) {
       # write this to csv file

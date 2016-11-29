@@ -47,15 +47,24 @@ subset = all_combos[which(all_combos$zone==3 & all_combos$month==12),]
 head(subset)
 ```
 
-Process the data for these combinations of months / years / zones. The user can also specify the 'every_minutes' argument, which finds observations from each vessel that are closest to that time. For example, if we wanted observations nearest to every 30 minutes, we'd use
+Process the data for these combinations of months / years / zones. The user can also specify the status codes to keep, which defaults to 
+
+```{r}
+status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+```
+
+More details here: [link]https://help.marinetraffic.com/hc/en-us/articles/203990998-What-is-the-significance-of-the-AIS-Navigational-Status-Values-#'
+
+The downsample_ais() function also takes the 'every_minutes' argument, which finds observations from each vessel that are closest to that time. For example, if we wanted observations nearest to every 30 minutes, we'd use
 
 ```{r process, cache=FALSE, results='hide'}
 downsample_ais(df = subset, every_minutes = 30)
 ```
 
-And now we have a few hundered records per file (instead of > 50000) in the 'filtered' folder,
+And now we have a few hundered or thousand records per file (instead of > 50000) in the 'filtered' folder,
 
 ```{r}
 dir("filtered")
 ```
 
+Using the 30-minute sampling of zone 3 for example, each year has < 10000 records. 
