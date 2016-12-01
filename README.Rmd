@@ -98,7 +98,7 @@ The downsample_ais() function also takes the 'every_minutes' argument, which fin
 downsample_ais(df = subset, every_minutes = 30)
 ```
 
-And now we have a few hundered or thousand records per file (instead of > 50000) in the 'filtered' folder,
+And now we have a few hundered or thousand records per tab-delimitted output files in the 'filtered' folder,
 
 ```{r}
 dir("filtered")

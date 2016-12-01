@@ -104,12 +104,12 @@ downsample_ais(df = subset, every_minutes = 30)
 #> Joining, by = "MMSI"
 ```
 
-And now we have a few hundered or thousand records per file (instead of &gt; 50000) in the 'filtered' folder,
+And now we have a few hundered or thousand records per tab-delimitted output files in the 'filtered' folder,
 
 ``` r
 dir("filtered")
-#> [1] "Zone3_12_2009.csv" "Zone3_12_2010.csv" "Zone3_12_2011.csv"
-#> [4] "Zone3_12_2012.csv" "Zone3_12_2013.csv" "Zone3_12_2014.csv"
+#> [1] "Zone3_12_2009.txt" "Zone3_12_2010.txt" "Zone3_12_2011.txt"
+#> [4] "Zone3_12_2012.txt" "Zone3_12_2013.txt" "Zone3_12_2014.txt"
 ```
 
 Using the 30-minute sampling of zone 3 for example, each year has &lt; 10000 records.
