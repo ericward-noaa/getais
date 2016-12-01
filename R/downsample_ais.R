@@ -3,12 +3,15 @@
 #' @param df The data frame consisting of the combinations of zones, years, months to process
 #' @param every_minutes How often algorithm finds the closest points to (e.g. 10 minute, 30 minute, etc)
 #' @param status_codes_to_keep Status codes to retain for downsampling. List here: https://help.marinetraffic.com/hc/en-us/articles/203990998-What-is-the-significance-of-the-AIS-Navigational-Status-Values-
+#' @param SOG_threshold threshold to to delete values less than this (corresponding to little or no movement)
+#' @param vessel_attr The attributes from the vessel table to join in
+#' @param voyage_attr The attributes from the voyage table to join in
 #'
 #' @return NULL
 #' @export NULL
 #'
 #' @examples
-downsample_ais = function(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15)) {
+downsample_ais = function(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination")) {
 
 # loop through files to process
 for(i in 1:nrow(df)) {
@@ -23,44 +26,79 @@ for(i in 1:nrow(df)) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/AIS_FGDBs/Zone",df$zone[i],"/Zone",df$zone[i],"_",df$year[i],"_",charMonth,".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast")
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
+      d = readOGR(fname,"Broadcast")
+
+      # process the tables to extract vessel and voyage
+      system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+      vessel = read.csv("Vessel.csv")
+      system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+      voyage = read.csv("Voyage.csv")
     }
     if(df$year[i] == 2010) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"_",month[df$month[i]],"_",df$year[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
-    }
-    if(df$year[i] == 2011) {
-      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb.zip")
-      download.file(url, destfile = "temp.zip", quiet=TRUE)
-      unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
-    }
-    if(df$year[i] == 2011) {
-      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb.zip")
-      download.file(url, destfile = "temp.zip", quiet=TRUE)
-      unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
+      d = readOGR(fname,"Broadcast", verbose=FALSE)
+
+      # process the tables to extract vessel and voyage
+      system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+      vessel = read.csv("Vessel.csv")
+      system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+      voyage = read.csv("Voyage.csv")
     }
     if(df$year[i] %in% c(2011,2012,2013)) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb.zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      if(df$year[i] %in% c(2011,2012)) d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),"Broadcast", verbose=FALSE)
-      if(df$year[i] == 2013) d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
+      if(df$year[i] %in% c(2011,2012)) {
+        d = readOGR(fname,"Broadcast", verbose=FALSE)
+        # process the tables to extract vessel and voyage
+        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+        vessel = read.csv("Vessel.csv")
+        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+        voyage = read.csv("Voyage.csv")
+      }
+      if(df$year[i] == 2013) {
+        d = readOGR(fname,paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+        # process the tables to extract vessel and voyage
+        layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i])
+        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
+        vessel = read.csv("Vessel.csv")
+        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
+        voyage = read.csv("Voyage.csv")
+      }
     }
     if(df$year[i] == 2014) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      d = readOGR(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"),paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
+      d = readOGR(fname, paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+
+      layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i])
+      system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
+      vessel = read.csv("Vessel.csv")
+      system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
+      voyage = read.csv("Voyage.csv")
     }
     unlink("temp.zip")
 
     # filter out status codes
     dat = as.data.frame(d)
     dat = filter(dat, Status %in% status_codes_to_keep)
+    # filter out small SOGs
+    dat = filter(dat, SOG >= SOG_threshold)
+
+    # join in Length and vessel type
+    dat = left_join(dat, vessel[,c("MMSI",vessel_attr)])
+    unlink("Vessel.csv")
+
+    # join in voyage destination
+    dat = left_join(dat, voyage[,c("MMSI",voyage_attr)])
+    unlink("Voyage.csv")
 
     dat$BaseDateTime = as_datetime(as.POSIXlt(as.character(dat$BaseDateTime)))
     dat$keep = 0
@@ -86,11 +124,11 @@ for(i in 1:nrow(df)) {
       mutate(mintime = ifelse(min_timediff == min(min_timediff), 1, 0)) %>%
       filter(mintime == 1) %>%
       ungroup %>%
-      select(-mintime, -chunk)
+      select(-mintime, -chunk, -keep)
 
     if(nrow(dat) > 0) {
       # write this to csv file
-      write.table(dat, paste0("filtered/Zone",df$zone[i],"_",df$month[i],"_",df$year[i],".csv"), row.names=F, col.names=T)
+      write.table(dat, paste0("filtered/Zone",df$zone[i],"_",df$month[i],"_",df$year[i],".csv"), sep="\t", row.names=F, col.names=T)
     }
     # trash the temp directory that was created
     unlink(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"), recursive=TRUE)

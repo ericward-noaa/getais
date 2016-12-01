@@ -1,4 +1,26 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+Software
+========
+
+The getais package relies on GDAL, which can be installed here: <http://www.kyngchaos.com/software/frameworks> Note that the PROJ and GEOS frameworks need to be installed before GDAL.
+
+To make sure GDAL is working properly on a Mac, open Terminal and follow these instructions: <http://tilemill-project.github.io/tilemill/docs/guides/gdal/>
+
+Setting environment
+===================
+
+RStudio doesn't automatically find the GDAL directory, so you may have to modify the PATH variable. You can get the PATH by opening terminal and type
+
+``` r
+> Sys.getenv("PATH")
+```
+
+Then set the PATH in R Studio. The piece in quotes for example is my path returned from Sys.getenv().
+
+``` r
+Sys.setenv("PATH"="/Library/Frameworks/GDAL.framework/Programs:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/Library/TeX/texbin")
+```
+
 getais
 ======
 
@@ -46,18 +68,40 @@ Process the data for these combinations of months / years / zones. The user can 
 status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15)
 ```
 
-More details here: \[link\]<https://help.marinetraffic.com/hc/en-us/articles/203990998-What-is-the-significance-of-the-AIS-Navigational-Status-Values-#>'
+More details here: <https://help.marinetraffic.com/hc/en-us/articles/203990998-What-is-the-significance-of-the-AIS-Navigational-Status-Values-#>'
+
+The additional information that can be joined in relates to the vessel and voyage. The vessel attributes can be specified with *vessel\_attr*. These default to
+
+``` r
+vessel_attr = c("VesselType","Length")
+```
+
+but can be changed, and other fields may be included ("IMO", "CallSign", "Name", "Width", "DimensionComponents"). The voyage attributes *voyage\_attr* default to just including destination,
+
+``` r
+voyage_attr = c("Destination")
+```
+
+but also allows other variables ("VariableID", "Cargo", "Draught", "ETA", "StartTime", "EndTime").
+
+### Running the function
 
 The downsample\_ais() function also takes the 'every\_minutes' argument, which finds observations from each vessel that are closest to that time. For example, if we wanted observations nearest to every 30 minutes, we'd use
 
 ``` r
 downsample_ais(df = subset, every_minutes = 30)
-#> Adding missing grouping variables: `chunk`
-#> Adding missing grouping variables: `chunk`
-#> Adding missing grouping variables: `chunk`
-#> Adding missing grouping variables: `chunk`
-#> Adding missing grouping variables: `chunk`
-#> Adding missing grouping variables: `chunk`
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
+#> Joining, by = "MMSI"
 ```
 
 And now we have a few hundered or thousand records per file (instead of &gt; 50000) in the 'filtered' folder,
