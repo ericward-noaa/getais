@@ -80,24 +80,21 @@ for(i in 1:nrow(df)) {
 
       layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i])
       system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
-      vessel = read.csv("Vessel.csv")
+      vessel = read.csv("Vessel.csv", stringsAsFactors=FALSE)
       system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
-      voyage = read.csv("Voyage.csv")
+      voyage = read.csv("Voyage.csv", stringsAsFactors=FALSE)
     }
     unlink("temp.zip")
 
     # filter out status codes
-    dat = as.data.frame(d)
-    dat = filter(dat, Status %in% status_codes_to_keep)
-    # filter out small SOGs
-    dat = filter(dat, SOG >= SOG_threshold)
+    dat = filter(as.data.frame(d), SOG >= SOG_threshold) %>%
+      filter(, Status %in% status_codes_to_keep) %>%
+      left_join(dat, vessel[,c("MMSI",vessel_attr)])
 
-    # join in Length and vessel type
-    dat = left_join(dat, vessel[,c("MMSI",vessel_attr)])
     unlink("Vessel.csv")
 
-    # join in voyage destination
-    dat = left_join(dat, voyage[,c("MMSI",voyage_attr)])
+    # join in voyage destination -- this messes up dplyr because voyage data may be incomplete
+    dat[,c(voyage_attr)] = voyage[match(dat$MMSI, voyage$MMSI),c(voyage_attr)]
     unlink("Voyage.csv")
 
     dat$BaseDateTime = as_datetime(as.POSIXlt(as.character(dat$BaseDateTime)))
