@@ -1,0 +1,313 @@
+MASS::fitdistr(z[which(is.finite(z))], "t")
+?
+library(mgcv)
+?gam
+df = data.frame("mean" = rnorm(10, 1, 0.1), "lower" = rnorm(10, -2, 0.1), "upper" = rnorm(10, 3, 0.1))
+library(ggplot2)#
+df = data.frame("year"=1:10, "mean" = rnorm(10, 1, 0.1), "lower" = rnorm(10, -2, 0.1), "upper" = rnorm(10, 3, 0.1))#
+#
+ggplot(df, aes(x = year, y = mean)) + geom_ribbon(aes(ylim = lower, ymax = upper))
+ggplot(df, aes(x = year, y = mean)) + geom_ribbon(aes(ymin = lower, ymax = upper))
+dev.off()
+ggplot(df, aes(x = year, y = mean)) + geom_ribbon(aes(ymin = lower, ymax = upper))
+ggplot(df, aes(x = year, y = mean)) + geom_ribbon(aes(ymin = lower, ymax = upper), color="grey30")
+ggplot(df, aes(x = year, y = mean)) + geom_ribbon(aes(ymin = lower, ymax = upper), color="grey70")
+ggplot(df, aes(x = year, y = mean)) + geom_ribbon(aes(ymin = lower, ymax = upper), color="red")
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), color="red")
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), color="red", fill = "band", alpha = 0.2)
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), color="red", fill = "grey30", alpha = 0.2)
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey30", alpha = 0.2)
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey30", alpha = 0.2) + xlab("Year") + ylab("Response")
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey40", alpha = 0.2) + xlab("Year") + ylab("Response")
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response")
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response") + geom_line("black")
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response") + geom_line(color="black")
+ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response") + geom_line(color="black",size=2)
+g1 = ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response") + geom_line(color="black",size=2)#
+g2 = ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response") + geom_line(color="black",size=2)
+g1 = ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response") + geom_line(color="black",size=2)#
+g2 = ggplot(df, aes(x = year, y = mean), color="red") + geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + xlab("Year") + ylab("Response") + geom_line(color="black",size=2)#
+#
+gridExtra::grid.arrange(g1, g2, ncol=1)
+library(ggplot2)#
+df = data.frame("year"=1:10, "mean" = rnorm(10, 1, 0.1), "lower" = rnorm(10, -2, 0.1), "upper" = rnorm(10, 3, 0.1))#
+#
+g1 = ggplot(df, aes(x = year, y = mean), color="red") + #
+geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + #
+xlab("Year") + ylab("Response") + geom_line(color="black",size=2)#
+g2 = ggplot(df, aes(x = year, y = mean), color="red") + #
+geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey20", alpha = 0.4) + #
+xlab("Year") + ylab("Response") + geom_line(color="black",size=2)#
+#
+gridExtra::grid.arrange(g1, g2, ncol=1)
+hist(rexp(100000,0.3))
+hist(rexp(100000,0.01))
+hist(rexp(100000,1))
+d = read.csv(file.choose())
+dim(D)
+dim(d)
+names(d)
+apply(d,2,sum,na.rm=T)
+apply(d,2,sum)
+apply(d,2, sum)
+dim(d)
+d[,112]
+sum(d[,112])
+names(d)
+apply(d[,15:138], 2, sum)
+apply(d[,15:138], 2, sum, na.rm=T)
+apply(d[,15:138], 2, sum)
+sort(apply(d[,15:138], 2, sum)
+)
+sort(apply(d[,15:138], 2, sum), index.return=T)
+hist(d[,28])
+hist(log(d[,28]))
+hist(log(d[,22]))
+hist(log(d[,36]))
+d[,36]
+hist((d[,36]))
+sort(apply(ceiling(d[,15:138]/1.0e10), 2, sum), index.return=T)
+hist(d[,15:138][,36])
+d[,15:138][,36]
+d[,15:138][,5]
+sort(apply(ceiling(d[,15:138]/1.0e10), 2, sum), index.return=T)
+names(d)
+unique(d$lat)
+unique(d$lon)
+names(d)[1:20]
+d$dateTime
+sort(apply(ceiling(d[,15:138]/1.0e10), 2, sum), index.return=T)
+d[,15:138][,5]
+names(d[,15:138][,5])
+names(d[,15:138][,5]
+d[,19]
+names(d)[1:20]
+sort(apply(ceiling(d[,15:138]/1.0e10), 2, sum), index.return=T)
+d[,15:138][,10]
+d[,15:138][,44]
+sort(apply(ceiling(d[,15:138]/1.0e10), 2, sum), index.return=T)
+d[,15:138][,5]
+d[,15:138][,1]
+d[,15:138][,2]
+d[,15:138][,3]
+d[,15:138][,4]
+d[,15:138][,5]
+d[,15:138][,6]
+d[,15:138][,7]
+d[,15:138][,8]
+15:138[8]
+(15:138)[8]
+names(d[,22])
+names(d[,1:22])
+d$dateTime
+names(d)
+d[,15:138][,8]
+d[,15:138][,9]
+d[,15:138][,10]
+d[,15:138][,11]
+d[,15:138][,12]
+d[,15:138][,13]
+d[,15:138][,14]
+d[,15:138][,15]
+d[,15:138][,16]
+d[,15:138][,17]
+d[,15:138][,5]
+hist(log(d[,5]))
+d
+names(d)
+names(d)[1:19]
+hist(rlnorm(10000,0,0.1))
+hist(rlnorm(10000,0,0.01))
+hist(rlnorm(10000,-1,0.01))
+2
+hist(rlnorm(10000,-2,0.01))
+hist(rlnorm(10000,-2,0.1))
+hist(rlnorm(10000,-2,0.2))
+hist(rgamma(1, 1/10)))
+hist(rgamma(1, 1/10))
+hist(rgamma(10000,1, 1/10))
+hist(1/(rgamma(10000,1, 1/10)^2))
+hist(rlnorm(10000,-0.2,0.4))
+hist(rlnorm(10000,-0.3,0.4))
+hist(rlnorm(10000,-0.5,0.4))
+hist(rlnorm(10000,-0.5,0.1))
+hist(rlnorm(10000,-0.6,0.1))
+hist(rlnorm(10000,-1,0.1))
+hist(rlnorm(10000,-2,0.1))
+hist(rlnorm(10000,-3,0.1))
+hist(rlnorm(10000,-3,0.3))
+hist(rlnorm(10000,-3,1))
+hist(rlnorm(10000,-3,2))
+hist(rlnorm(10000,-3,0.3))
+hist(rlnorm(10000,-3,0.5))
+hist(rlnorm(10000,-2,0.2))
+hist(rlnorm(10000,-2,1))
+hist(rlnorm(10000,-1,1))
+d= read.csv(file.choose())
+names(d)
+unique(d$UP_YEAR)
+head(d)
+unique(d$IFQ)
+load("/Users/eric.ward/Documents/fleetwide/fitid.RData")
+ls()
+d
+names(d)
+unique(d$sector)
+unique(d$sector)[1]
+unique(d$sector)[2]
+unique(d$sector)[3]
+library(dplyr)
+ls()
+remove("fit.id.20")
+remove("fit.id.50")
+ls()
+X = d
+ls()
+remove("d")
+ls()
+# Discards from pre-Catch Shares fishery, bottom trawl gear only#
+# preCS <- X[which(X$sector=="Limited Entry Trawl" & X$gear=="Bottom Trawl" & X$CATCH_DISPOSITION=="D"),]#
+# preCS <- X[which(X$sector=="Limited Entry Trawl" & X$gear=="Bottom Trawl"),]#
+# # Discards + retained from post-Catch Shares fishery, bottom trawl gear only#
+# postCS <- X[which(X$sector=="Catch Shares" & X$gear=="Bottom Trawl"),]#
+data <- X[which((X$sector %in% c("Limited Entry Trawl","Catch Shares")) & X$gear=="Bottom Trawl"),]
+# Function: assign_target_group#
+# Input: data frame#
+# Output: a vector "target_group" (to be added to input data frame)#
+	# target_group = sole, flat, rock, pred, elasmo, thorny, mixed (e.g. DTS, other), unknown#
+	# WCGOP uses PacFIN codes, available at: http://pacfin.psmfc.org/pacfin_pub/data_rpts_pub/code_lists/sp.txt#
+	# LGRK - couldn't find code in PacFIN, but "Large Rockfish" according to http://www.pcouncil.org/bb/2009/0609/E8a_ATT3_0609.pdf#
+	# GRDR - grenadiers, put in predators#
+	# UHAG - hagfish, didn't put anywhere (only targeted by non-trawl gear)#
+	# UMCK - mackerel, didn't put anywhere (only targeted by non-trawl gear)#
+	# SRMP - shrimp, didn't put anywhere (targeted by other fishery)#
+assign_target_group <- function(df){#
+	target_group <- rep(0,nrow(df))#
+	target_group[which(df$TARGET %in% c("DTS","NSM"))] <- "mixed"#
+	target_group[which(df$TARGET %in% c("PTRL","DOVR","EGLS","SSOL","DWD","REX","RSOL"))] <- "sole"#
+	target_group[which(df$TARGET %in% c("SDAB","ARTH","OFLT","STRY","CHLB","PDAB","PHLB"))] <- "flat"#
+	target_group[which(df$TARGET %in% c("LGRK","WDOW","SSLF","SSHR","SCOR","REYE","QLBK","GPHR","CHNA","BRSL","SSLP","CLPR","POP","BANK","YTRK","BRSH","NSLP","NSHR","ROCK","SNOS","URCK","DBRK","NSLF","CNRY","BCAC","BLCK","BLGL","BRWN","CBZN"))] <- "rock"#
+	target_group[which(df$TARGET %in% c("PCOD","SABL","LCOD","PWHT","GRDR","CHNK","SHPD","WCRK"))] <- "pred"#
+	target_group[which(df$TARGET %in% c("SKAT","DSRK","LSKT","BSKT","OSRK"))] <- "elasmo"#
+	target_group[which(df$TARGET %in% c("THDS","LSPN","SSPN"))] <- "thorny"#
+	target_group[which(df$TARGET %in% c("UNKN","","MSC2","ZMIS"))] <- "unknown"#
+	return(target_group)#
+}
+data$target_group <- assign_target_group(data)#
+# sort(table(preCS$target_group),decreasing=T)
+remove(ls)
+remove(list=ls())
+load("/Users/eric.ward/Documents/fleetwide/fitid.RData")
+ls()
+fit.id.20
+load("/Users/eric.ward/Documents/fleetwide/test_results/results.RData")
+ls()
+bycatch.est
+fit.id.20
+ls()
+species
+d = read.csv(file.choose())
+names(d)
+d
+head(d)
+unique(d$SCIENTIFIC_NAME)
+d = read.csv(file.choose())
+names(d)
+table(d$UP_YEAR)
+load("/Users/eric.ward/Documents/fleetwide/test_results/results.RData")
+ls()
+species
+df = data.frame(x = runif(1000), y = runif(1000), #
+z = rnorm(1000,3), year = sample(1:7,size=1000,replace=T))
+g1 = gam(z ~ year + s(x,y, by =as.factor(year)))
+library(gam)#
+#
+g1 = gam(z ~ year + s(x,y, by =as.factor(year)))
+g1 = gam(z ~ year + s(x,y, by =as.factor(year)), data=df)
+g1 = gam(z ~ year + s(x,y, by =year), data=df)
+g1 = gam(z ~ s(x,y,by=year), data=df)
+names(df)
+df$year
+g1 = gam(z ~ s(x,y), data=df)
+g1 = gam(z ~ s(x,y,by=df$year), data=df)
+g1 = gam(z ~ s(x,y,by=as.numeric(df$year)), data=df)
+g1 = gam(z ~ s(x,y,by=year), data=df)
+g1 = gam(z ~ s(x,y,by=as.factor(year)), data=df)
+?s
+g1 = gam(z ~ te(x,y,by=as.factor(year)), data=df)
+g1 = gam(z ~ s(x,y,by=as.factor(year)), data=df)
+library(gam)#
+#
+g1 = gam(z ~ s(x,y,by=as.factor(year)), data=df)
+df
+df = data.frame(x = runif(1000), y = runif(1000), #
+z = rnorm(1000,3), year = sample(1:5,size=1000,replace=T))#
+library(gam)
+g1 = gam(z ~ s(x,y,by=as.factor(year)), data=df)
+g1 = gam(z ~ as.factor(year) + s(x,y), data=df)
+g1
+summary(g1)
+g1
+df = data.frame(x = runif(1000), y = runif(1000), #
+z = rnorm(1000,3), year = sample(1:5,size=1000,replace=T))#
+library(gam)#
+#
+g1 = gam(z ~ as.factor(year) + s(x,y), data=df)
+g1
+df = data.frame(x = runif(1000), y = runif(1000), #
+z = rnorm(1000,3), year = sample(1:5,size=1000,replace=T))#
+library(gam)#
+#
+g1 = gam(z ~ as.factor(year) + s(x,y,by=year), data=df)
+df = data.frame(x = runif(1000), y = runif(1000), #
+z = rnorm(1000,3), year = sample(1:5,size=1000,replace=T))#
+library(gam)#
+#
+g1 = gam(z ~ as.factor(year) + s(x,y,by=as.factor(year)), data=df)
+devtools::install("rBBS")
+devtools::install("oharar/rBBS")
+library(Matrix)
+rankMatrix(matrix(runif(16),4,4))
+rankMatrix(matrix(runif(100),10,10))
+exp(16 * (5.71 + 0.784*log(50) -8.47/4 + 1.04 * log(50) / 4) / (3.576 + 16))
+exp(16 * (5.71 + 0.784*log(50) -8.47/4 + 1.04*log(50)/4)/(3.57*log(50) + 16))
+d = read.csv(file.choose())
+d
+names(d)
+d$brood_year
+range(d$brood_year)
+System('env')
+Systemsystem("echo $PATH")('env')
+system("echo $PATH")
+Sys.getenv("PATH")
+d = read.table(file.choose())
+dim(d)
+d = read.csv(file.choose())
+names(d)
+d$run_type
+d$run[1:10]
+d = d[which(d$run==1),]
+dim(d)
+d$release_location_rmis_region
+table(d$release_location_rmis_region)
+d = read.csv(file.choose())
+names(d)
+dim(d)
+Sys.setenv("PATH"="/Library/Frameworks/GDAL.framework/Programs:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/Library/TeX/texbin")
+devtools::install_github("eric-ward/getais")
+setwd(getais)
+setwd("getais")
+dir()
+getwd()
+setwd("ais")
+setwd("/getais")
+setwd("documents/getais")
+all_combos = expand.grid("zone"=1:19,"year"=2009:2014,"month"=1:12)
+subset = all_combos[which(all_combos$zone==3 & all_combos$month==12),]
+subset
+all_combos = expand.grid("zone"=1:19,"year"=2009:2014,"month"=1:12)
+subset = all_combos[which(all_combos$zone==3 & all_combos$month==10),]
+subset
+downsample_ais(df = subset, every_minutes = 30)
+library(getais)
+downsample_ais(df = subset, every_minutes = 30)

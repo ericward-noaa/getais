@@ -27,7 +27,7 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
-      d = readOGR(fname,"Broadcast")
+      dat = readOGR(fname,"Broadcast")
 
       # process the tables to extract vessel and voyage
       system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
@@ -40,7 +40,7 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
-      d = readOGR(fname,"Broadcast", verbose=FALSE)
+      dat = readOGR(fname,"Broadcast", verbose=FALSE)
 
       # process the tables to extract vessel and voyage
       system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
@@ -54,7 +54,7 @@ for(i in 1:nrow(df)) {
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
       if(df$year[i] %in% c(2011,2012)) {
-        d = readOGR(fname,"Broadcast", verbose=FALSE)
+        dat = readOGR(fname,"Broadcast", verbose=FALSE)
         # process the tables to extract vessel and voyage
         system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
         vessel = read.csv("Vessel.csv")
@@ -62,7 +62,7 @@ for(i in 1:nrow(df)) {
         voyage = read.csv("Voyage.csv")
       }
       if(df$year[i] == 2013) {
-        d = readOGR(fname,paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+        dat = readOGR(fname,paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
         # process the tables to extract vessel and voyage
         layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i])
         system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
@@ -76,7 +76,7 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
-      d = readOGR(fname, paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+      dat = readOGR(fname, paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
 
       layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i])
       system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
@@ -87,9 +87,9 @@ for(i in 1:nrow(df)) {
     unlink("temp.zip")
 
     # filter out status codes
-    dat = filter(as.data.frame(d), SOG >= SOG_threshold) %>%
-      filter(, Status %in% status_codes_to_keep) %>%
-      left_join(dat, vessel[,c("MMSI",vessel_attr)])
+    dat = filter(as.data.frame(dat), SOG >= SOG_threshold) %>%
+      filter(Status %in% status_codes_to_keep) %>%
+      left_join(vessel[,c("MMSI",vessel_attr)])
 
     unlink("Vessel.csv")
 

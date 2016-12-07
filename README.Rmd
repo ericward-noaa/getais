@@ -63,7 +63,7 @@ all_combos = expand.grid("zone"=1:19,"year"=2009:2014,"month"=1:12)
 As an example, we'll only use data from December and UTM Zone 3.
 
 ```{r filter}
-subset = all_combos[which(all_combos$zone==3 & all_combos$month==12),]
+subset = all_combos[which(all_combos$zone==10 & all_combos$month==12),]
 
 head(subset)
 ```
@@ -105,3 +105,12 @@ dir("filtered")
 ```
 
 Using the 30-minute sampling of zone 3 for example, each year has < 10000 records. 
+
+Additional tests for Blake's data,
+
+```{r}
+downsample_ais(df = data.frame("year"=2009,"zone"=11,"month"=10), every_minutes = 30)
+downsample_ais(df = data.frame("year"=2012,"zone"=3,"month"=10), every_minutes = 30)
+downsample_ais(df = data.frame("year"=2014,"zone"=10,"month"=10), every_minutes = 30)
+```
+
