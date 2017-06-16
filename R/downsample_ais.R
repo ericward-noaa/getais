@@ -76,10 +76,10 @@ for(i in 1:nrow(df)) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",char_month,"/Zone",df$zone[i],"_",df$year[i],"_",char_month,".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
-      dat = readOGR(fname, paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
+      dat = readOGR(fname, paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Broadcast"), verbose=FALSE)
 
-      layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i])
+      layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month)
       system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
       vessel = read.csv("Vessel.csv", stringsAsFactors=FALSE)
       system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
