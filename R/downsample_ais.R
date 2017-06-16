@@ -72,7 +72,8 @@ for(i in 1:nrow(df)) {
       }
     }
     if(df$year[i] == 2014) {
-      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".zip")
+      char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
+      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",char_month,"/Zone",df$zone[i],"_",df$year[i],"_",char_month,".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
