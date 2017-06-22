@@ -6,12 +6,13 @@
 #' @param SOG_threshold threshold to to delete values less than this (corresponding to little or no movement)
 #' @param vessel_attr The attributes from the vessel table to join in
 #' @param voyage_attr The attributes from the voyage table to join in
+#' @param raw If true, no filtering based on time applied. Defaults to FALSE.
 #'
 #' @return NULL
 #' @export NULL
 #'
 #' @examples
-downsample_ais = function(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination")) {
+downsample_ais = function(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination"), raw = FALSE) {
 
 # loop through files to process
 for(i in 1:nrow(df)) {
@@ -101,6 +102,7 @@ for(i in 1:nrow(df)) {
     dat$BaseDateTime = as_datetime(as.POSIXlt(as.character(dat$BaseDateTime)))
     dat$keep = 0
 
+    if(raw == FALSE) {
     dat$BaseDateTime_round = round_date(dat$BaseDateTime, "minute")
 
     dat$minutes = minute(dat$BaseDateTime_round) + second(dat$BaseDateTime)/60
@@ -123,6 +125,7 @@ for(i in 1:nrow(df)) {
       filter(mintime == 1) %>%
       ungroup %>%
       select(-mintime, -chunk, -keep)
+    }
 
     if(nrow(dat) > 0) {
       # write this to csv file
