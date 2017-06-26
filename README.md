@@ -30,9 +30,8 @@ You can install the development version of the package with:
 
 ``` r
 # install.packages("devtools")
-if("getais" %in% rownames(installed.packages()) == FALSE) {
-  devtools::install_github("eric-ward/getais")
-}
+devtools::install_github("eric-ward/getais")
+
 library(getais)
 ```
 
