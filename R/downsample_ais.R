@@ -129,7 +129,7 @@ for(i in 1:nrow(df)) {
 
     if(nrow(dat) > 0) {
       # write this to csv file
-      write.table(dat, paste0("filtered/Zone",df$zone[i],"_",df$month[i],"_",df$year[i],".txt"), sep="\t", row.names=F, col.names=T)
+      saveRDS(dat, paste0("filtered/Zone",df$zone[i],"_",df$month[i],"_",df$year[i],".rds"))
     }
     # trash the temp directory that was created
     unlink(paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb"), recursive=TRUE)
