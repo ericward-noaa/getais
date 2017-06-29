@@ -37,10 +37,12 @@ for(i in 1:nrow(df)) {
       voyage = read.csv("Voyage.csv")
     }
     if(df$year[i] == 2010) {
-      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"_",month[df$month[i]],"_",df$year[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".zip")
+      char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
+
+      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",char_month,"_",month[df$month[i]],"_",df$year[i],"/Zone",df$zone[i],"_",df$year[i],"_",char_month,".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
       dat = readOGR(fname,"Broadcast", verbose=FALSE)
 
       # process the tables to extract vessel and voyage
@@ -50,10 +52,11 @@ for(i in 1:nrow(df)) {
       voyage = read.csv("Voyage.csv")
     }
     if(df$year[i] %in% c(2011,2012,2013)) {
-      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",df$month[i],"/Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb.zip")
+      char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
+      url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/",char_month,"/Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb.zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
       if(df$year[i] %in% c(2011,2012)) {
         dat = readOGR(fname,"Broadcast", verbose=FALSE)
         # process the tables to extract vessel and voyage
@@ -63,9 +66,9 @@ for(i in 1:nrow(df)) {
         voyage = read.csv("Voyage.csv")
       }
       if(df$year[i] == 2013) {
-        dat = readOGR(fname,paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],"_Broadcast"), verbose=FALSE)
+        dat = readOGR(fname,paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Broadcast"), verbose=FALSE)
         # process the tables to extract vessel and voyage
-        layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i])
+        layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month)
         system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
         vessel = read.csv("Vessel.csv")
         system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
