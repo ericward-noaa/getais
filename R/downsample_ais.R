@@ -27,7 +27,9 @@ for(i in 1:nrow(df)) {
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/AIS_FGDBs/Zone",df$zone[i],"/Zone",df$zone[i],"_",df$year[i],"_",charMonth,".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
-      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",df$month[i],".gdb")
+      char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
+
+      fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
       dat = readOGR(fname,"Broadcast")
 
       # process the tables to extract vessel and voyage

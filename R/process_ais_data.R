@@ -1,17 +1,18 @@
 library(lubridate)
 library(dplyr)
 library(PBSmapping)
+library(fields)
 
 process_ais_data = function(aisdata) {
   # The whale data should be in GMT, so we need to convert
   # the AIS data to GMT
-  aisdata$BaseDateTime = as.POSIXct(aisdata$BaseDateTime)
+  aisdata$BaseDateTime = as.POSIXct(aisdata$BaseDateTime, tz="GMT")
 
   # remove minutes not within 5 min of hr
-  g = aisdata %>%
-    mutate(min = minute(as_datetime(aisdata$BaseDateTime, tz="GMT"))) %>%
-    filter(min >= 55 | min < 5) %>%
-    select(-COG, -Heading, -ROT, -ReceiverType, -ReceiverID, -keep, -min) %>%
+  g = aisdata %>% ungroup %>%
+    mutate(mint = minute(as_datetime(aisdata$BaseDateTime, tz="GMT"))) %>%
+    filter(mint >= 55 | mint < 5) %>%
+    select(-COG, -Heading, -ROT, -ReceiverType, -ReceiverID, -keep, -mint) %>%
     rename(X = coords.x1) %>%
     rename(Y = coords.x2)
 
@@ -27,11 +28,3 @@ process_ais_data = function(aisdata) {
 
   return(g)
 }
-
-d = readRDS("filtered/Zone10_12_2013.rds")
-d = process_ais_data(d)
-saveRDS(d, "filtered/Zone10_12_2013_processed.rds")
-
-d = readRDS("filtered/Zone10_1_2014.rds")
-d = process_ais_data(d)
-saveRDS(d, "filtered/Zone10_1_2014_processed.rds")
