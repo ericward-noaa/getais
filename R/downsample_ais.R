@@ -94,9 +94,13 @@ for(i in 1:nrow(df)) {
     unlink("temp.zip")
 
     # filter out status codes
+    #dat = filter(as.data.frame(dat), SOG >= SOG_threshold) %>%
+    #  filter(Status %in% status_codes_to_keep) %>%
+    #  left_join(vessel[,c("MMSI",vessel_attr)])
     dat = filter(as.data.frame(dat), SOG >= SOG_threshold) %>%
-      filter(Status %in% status_codes_to_keep) %>%
-      left_join(vessel[,c("MMSI",vessel_attr)])
+      filter(Status %in% status_codes_to_keep)
+
+    dat[,c(vessel_attr)] = vessel[match(dat$MMSI, vessel$MMSI),c(vessel_attr)]
 
     unlink("Vessel.csv")
 
