@@ -23,7 +23,7 @@ Sys.setenv("PATH"="/Library/Frameworks/GDAL.framework/Programs:/usr/local/bin:/u
 
 Setting environment -- PC
 ===================
-After installing GDAL, we need to add the path and GDAL_DATA variables to the environment. In R Studio, you can do this with:
+After installing GDAL (https://trac.osgeo.org/osgeo4w/), we need to add the path and GDAL_DATA variables to the environment. In R Studio, you can do this with:
 ``` r
 path = Sys.getenv("PATH")
 Sys.setenv("PATH"= paste0(path, ";C:\\OSGeo4W64\\bin"))
