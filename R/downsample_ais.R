@@ -33,10 +33,16 @@ for(i in 1:nrow(df)) {
       dat = readOGR(fname,"Broadcast")
 
       # process the tables to extract vessel and voyage
-      system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-      vessel = read.csv("Vessel.csv")
-      system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-      voyage = read.csv("Voyage.csv")
+      if(.Platform$OS.type != "windows") {
+        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+      }
+      else {
+        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+      }
+      vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
+      voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
     }
     if(df$year[i] == 2010) {
       char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
@@ -48,10 +54,16 @@ for(i in 1:nrow(df)) {
       dat = readOGR(fname,"Broadcast", verbose=FALSE)
 
       # process the tables to extract vessel and voyage
-      system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-      vessel = read.csv("Vessel.csv")
-      system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-      voyage = read.csv("Voyage.csv")
+      if(.Platform$OS.type != "windows") {
+        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+      }
+      else {
+        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+      }
+      vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
+      voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
     }
     if(df$year[i] %in% c(2011,2012,2013)) {
       char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
@@ -62,19 +74,32 @@ for(i in 1:nrow(df)) {
       if(df$year[i] %in% c(2011,2012)) {
         dat = readOGR(fname,"Broadcast", verbose=FALSE)
         # process the tables to extract vessel and voyage
-        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-        vessel = read.csv("Vessel.csv")
-        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-        voyage = read.csv("Voyage.csv")
+        if(.Platform$OS.type != "windows") {
+          system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+          system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+        }
+        else {
+          shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
+          shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
+        }
+        vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
+        voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
       }
       if(df$year[i] == 2013) {
         dat = readOGR(fname,paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Broadcast"), verbose=FALSE)
         # process the tables to extract vessel and voyage
         layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month)
+
+        if(.Platform$OS.type != "windows") {
         system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
-        vessel = read.csv("Vessel.csv")
         system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
-        voyage = read.csv("Voyage.csv")
+        }
+        else {
+        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
+        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
+        }
+        vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
+        voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
       }
     }
     if(df$year[i] == 2014) {
@@ -86,10 +111,16 @@ for(i in 1:nrow(df)) {
       dat = readOGR(fname, paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Broadcast"), verbose=FALSE)
 
       layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month)
-      system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
-      vessel = read.csv("Vessel.csv", stringsAsFactors=FALSE)
-      system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
-      voyage = read.csv("Voyage.csv", stringsAsFactors=FALSE)
+      if(.Platform$OS.type != "windows") {
+        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
+        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
+      }
+      else {
+        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
+        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
+      }
+      vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
+      voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
     }
     unlink("temp.zip")
 
