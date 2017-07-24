@@ -24,11 +24,11 @@ Sys.setenv("PATH"="/Library/Frameworks/GDAL.framework/Programs:/usr/local/bin:/u
 Setting environment -- PC
 ===================
 After installing GDAL, we need to add the path and GDAL_DATA variables to the environment. In R Studio, you can do this with:
-
+``` r
 path = Sys.getenv("PATH")
 Sys.setenv("PATH"= paste0(path, ";C:\\OSGeo4W64\\bin"))
 Sys.setenv("GDAL_DATA" = "C:\\OSGeo4W64\\share\\gdal")
-
+```
 You can set these permanantly following these instructions, http://gisforthought.com/setting-up-your-gdal-and-ogr-environmental-variables/, but these need to be reset with each instance of RStudio. 
 
 getais
