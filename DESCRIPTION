@@ -12,3 +12,4 @@ Depends:
     rgdal,
     dplyr,
     lubridate
+RoxygenNote: 6.0.1
