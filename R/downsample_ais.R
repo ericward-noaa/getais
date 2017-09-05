@@ -38,8 +38,7 @@ for(i in 1:nrow(df)) {
       if(.Platform$OS.type != "windows") {
         system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
         system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-      }
-      else {
+      } else {
         shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
         shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
       }
