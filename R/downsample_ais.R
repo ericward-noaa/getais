@@ -9,11 +9,13 @@
 #' @param raw If true, no filtering based on time applied. Defaults to FALSE.
 #'
 #' @return NULL
-#' @export NULL
+#' @export
 #'
-#' @examples
 downsample_ais = function(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination"), raw = FALSE) {
 
+if(!dir.exists(paste0(getwd(),"/filtered"))) {
+  dir.create(paste0(getwd(),"/filtered")) # create output directory if doesn't exist
+}
 # loop through files to process
 for(i in 1:nrow(df)) {
   # if processed file doesn't exist, download
