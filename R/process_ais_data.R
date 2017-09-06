@@ -1,3 +1,19 @@
+#' Processes raw AIS data, creates cleaned data frame of hourly observations with speed calculations
+#'
+#' @param aisdata The data frame consisting of the combinations of zones, years, months to process
+#' @param min_from_hr Window around the top of the hour used. Every vessel might not have a position recorded at exactly 12:00 for example, so the closest position +/- minutes_from_hour is used. Defaults to 7.5 (15 min window)
+#' @param time_zone The time zone used in calculations (e.g. "GMT", "UTC")
+#'
+#' @return processed data frame
+#' @export
+#' @examples
+#' \dontrun{
+#' df = data.frame("month"=1:4, "year" = 2009, "zone"=10)
+#' downsample_ais(df, raw = TRUE) # gets raw data from marine cadastre
+#'
+#' d = readRDS("filtered/Zone10_01_2009.rds")
+#' d_processed = process_ais_data(d, time_zone = "UTC")
+#' }
 process_ais_data = function(aisdata, min_from_hr = 7.5, time_zone = "GMT") {
   # The whale data should be in GMT, so we need to convert
   # the AIS data to GMT?
