@@ -26,3 +26,9 @@ downsample_ais(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9,
 \description{
 Returns null, just processes data from web
 }
+\examples{
+\dontrun{
+df = data.frame("month"=1:4, "year" = 2009, "zone"=10)
+downsample_ais(df, raw = TRUE) # gets raw data from marine cadastre
+}
+}

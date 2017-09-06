@@ -10,7 +10,11 @@
 #'
 #' @return NULL
 #' @export
-#'
+#' @examples
+#' \dontrun{
+#' df = data.frame("month"=1:4, "year" = 2009, "zone"=10)
+#' downsample_ais(df, raw = TRUE) # gets raw data from marine cadastre
+#' }
 downsample_ais = function(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination"), raw = FALSE) {
 
 if(!dir.exists(paste0(getwd(),"/filtered"))) {
