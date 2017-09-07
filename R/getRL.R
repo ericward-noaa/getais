@@ -2,12 +2,15 @@
 #'
 #' @param whale The data frame include date(PST), position(UTM) of the whale
 #' @param vessel The data frame include date(PST), position(UTM) of the vessel
+#' @param map The map around whale and vessel
+#' @param depth The depth data include location (x,y) and depth (in meters)
+#'
 #'
 #' @return dataframe
 #' @export
 
 
-getRL = function(whale, vessel) {
+getRL = function(whale, vessel, map, depth) {
   ## whale
   # separte Date
   whale$date = as.POSIXct(whale$date)
@@ -22,7 +25,8 @@ getRL = function(whale, vessel) {
   # obs for every hour
   whale_hour = whale %>%
     group_by(year,month,day,hour) %>%
-    filter(minute==min(minute))
+    filter(minute==min(minute)) %>%
+    select(-X)
 
   ## vessel
   # estimate to nearest hour
@@ -45,7 +49,7 @@ getRL = function(whale, vessel) {
     mutate(z = ifelse(minute>=55, 3600 - (minute*60+second), minute*60+second)) %>%
     filter(z == min(z))
 
-  # combine two data frames, keep mutual observations
+  ## combine two data frames, keep mutual observations
   # delete vessel which length = 0 or is NA
   # keep the vessels that inside +- 100 km of each whale's location
   data = whale_hour %>%
@@ -55,18 +59,20 @@ getRL = function(whale, vessel) {
     filter(Length > 0)
 
   # find index(observation) which there is no land between the vessel and the whale
-  index = acrossLand(df=data)
+  index = acrossLand(df=data, map = map)
 
-  ## only keep obs that does cross land
+  ## only keep obs that does not cross land
   data_remove_land = data[index,]
 
+  # calculate the maximum depth for each whale & vessel pair
+  data_remove_land$maxDepth = maxDepth(df = data_remove_land, map, depth, segment_length = 0.5)
 
   # calculate the RL for every vessel
   RL_eachObs = data_remove_land %>%
     mutate(SL = ifelse(Length <=10,163.6, ifelse(10 <Length&Length<=25, 157.2,
                                                  ifelse(25 <Length&Length<=50, 176.4,
                                                         ifelse(50 <Length&Length<100, 181.1,190.8))))) %>%
-    mutate(RL = SL-20*log10(dis*1000))
+    mutate(RL = SL-10*log10(maxDepth) - 10*log10(dis*1000))
 
   # calculate the RL in every whale's location
   RL_eachLoc_sum =  RL_eachObs %>%
@@ -74,6 +80,7 @@ getRL = function(whale, vessel) {
     summarise(n = n(),RL_total = 10*log10(sum(10^(RL/10)))) %>%
     left_join(whale_hour,by = c("year","month","day","hour")) %>% # want whale's lon and lat
     select(year,month,day,hour,n,RL_total,lon,lat)
+
 
   return(RL_eachLoc_sum)
 }
