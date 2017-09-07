@@ -5,6 +5,7 @@
 #' @param time_zone The time zone used in calculations (e.g. "GMT", "UTC")
 #'
 #' @return processed data frame
+#' @import PBSmapping, fields, dplyr
 #' @export
 #' @examples
 #' \dontrun{
@@ -22,12 +23,12 @@ process_ais_data = function(aisdata, min_from_hr = 7.5, time_zone = "GMT") {
 
   aisdata = arrange(aisdata, MMSI, BaseDateTime) %>%
     group_by(MMSI) %>%
-    mutate(diff_time = c(NA, diff(BaseDateTime)),
+    mutate(diff_time = c(NA, diff(BaseDateTime)) / (60*60),
       lon_lag = c(coords.x1[-1],NA),
       lat_lag = c(coords.x2[-1],NA),
       diff_dist = rdist.earth.vec(cbind(coords.x1,coords.x2),
         cbind(lon_lag, lat_lag), miles=FALSE),
-      speed_kmhr = 60*diff_dist/diff_time)
+      speed_kmhr = diff_dist/diff_time)
 
   # remove minutes not within 7.5 min of hr.
   g = aisdata %>% ungroup %>%
