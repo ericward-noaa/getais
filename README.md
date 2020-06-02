@@ -1,35 +1,3 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-Software
-========
-
-The getais package relies on GDAL, which can be installed here: <http://www.kyngchaos.com/software/frameworks> Note that the PROJ and GEOS frameworks need to be installed before GDAL.
-
-To make sure GDAL is working properly on a Mac, open Terminal and follow these instructions: <http://tilemill-project.github.io/tilemill/docs/guides/gdal/>
-
-Setting environment -- MAC
-===================
-
-RStudio doesn't automatically find the GDAL directory, so you may have to modify the PATH variable. You can get the PATH by opening terminal and type
-
-``` r
-> Sys.getenv("PATH")
-```
-
-Then set the PATH in R Studio. The piece in quotes for example is my path returned from Sys.getenv().
-
-``` r
-Sys.setenv("PATH"="/Library/Frameworks/GDAL.framework/Programs:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/Library/TeX/texbin")
-```
-
-Setting environment -- PC
-===================
-After installing GDAL (https://trac.osgeo.org/osgeo4w/), we need to add the path and GDAL_DATA variables to the environment. In R Studio, you can do this with:
-``` r
-path = Sys.getenv("PATH")
-Sys.setenv("PATH"= paste0(path, ";C:\\OSGeo4W64\\bin"))
-Sys.setenv("GDAL_DATA" = "C:\\OSGeo4W64\\share\\gdal")
-```
-You can set these permanantly following these instructions, http://gisforthought.com/setting-up-your-gdal-and-ogr-environmental-variables/, but these need to be reset with each instance of RStudio. 
 
 getais
 ======
