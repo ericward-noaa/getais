@@ -15,27 +15,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Software
-
-The getais package relies on GDAL, which can be installed here:
-http://www.kyngchaos.com/software/frameworks
-Note that the PROJ and GEOS frameworks need to be installed before GDAL.  
-
-To make sure GDAL is working properly on a Mac, open Terminal and follow these instructions:
-http://tilemill-project.github.io/tilemill/docs/guides/gdal/
-
-# Setting environment
-
-RStudio doesn't automatically find the GDAL directory, so you may have to modify the PATH variable. You can get the PATH by opening terminal and type 
-```{r eval=FALSE}
-> Sys.getenv("PATH")
-```
-
-Then set the PATH in R Studio. The piece in quotes for example is my path returned from Sys.getenv().
-```{r}
-Sys.setenv("PATH"="/Library/Frameworks/GDAL.framework/Programs:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/Library/TeX/texbin")
-```
-
 # getais
 
 The getais R package is simply a data processing package, meant to download and process the very large AIS datasets from MarineCadastre.gov. 
@@ -45,7 +24,7 @@ You can install the development version of the package with:
 ```{r, eval=TRUE, results='hide', message=FALSE, warning=FALSE}
 # install.packages("devtools")
 if("getais" %in% rownames(installed.packages()) == FALSE) {
-  devtools::install_github("eric-ward/getais")
+  devtools::install_github("ericward-noaa/getais")
 }
 library(getais)
 ```
@@ -60,10 +39,10 @@ if (!file.exists("filtered")) dir.create("filtered")
 all_combos = expand.grid("zone"=1:19,"year"=2009:2014,"month"=1:12)
 ```
 
-As an example, we'll only use data from December and UTM Zone 3.
+As an example, we'll only use data from December and UTM Zone 9.
 
 ```{r filter}
-subset = all_combos[which(all_combos$zone==10 & all_combos$month==12),]
+subset = all_combos[which(all_combos$zone==9 & all_combos$month==12),]
 
 head(subset)
 ```
@@ -95,7 +74,7 @@ but also allows other variables ("VariableID", "Cargo", "Draught", "ETA", "Start
 The downsample_ais() function also takes the 'every_minutes' argument, which finds observations from each vessel that are closest to that time. For example, if we wanted observations nearest to every 30 minutes, we'd use
 
 ```{r process, cache=FALSE, results='hide'}
-downsample_ais(df = subset, every_minutes = 30)
+downsample_ais(df = subset, every_minutes = 30, raw = TRUE)
 ```
 
 And now we have a few hundered or thousand records per tab-delimitted output files in the 'filtered' folder,
@@ -108,7 +87,7 @@ Using the 30-minute sampling of zone 3 for example, each year has < 10000 record
 
 Additional tests for Blake's data,
 
-```{r}
+```{r eval = FALSE}
 downsample_ais(df = data.frame("year"=2009,"zone"=11,"month"=10), every_minutes = 30)
 downsample_ais(df = data.frame("year"=2012,"zone"=3,"month"=10), every_minutes = 30)
 downsample_ais(df = data.frame("year"=2014,"zone"=10,"month"=10), every_minutes = 30)
