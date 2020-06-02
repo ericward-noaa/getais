@@ -10,6 +10,7 @@
 #'
 #' @return NULL
 #' @export
+#' @importFrom sf st_read
 #' @importFrom dplyr select group_by mutate filter
 #' @importFrom lubridate as_datetime round_date minute second month day
 #' @examples
@@ -18,7 +19,11 @@
 #' downsample_ais(df, raw = TRUE) # gets raw data from marine cadastre
 #' }
 downsample_ais = function(df, every_minutes = 10,
-  status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination"), raw = FALSE) {
+  status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15),
+  SOG_threshold = 1,
+  vessel_attr = c("VesselType","Length"),
+  voyage_attr = c("Destination"),
+  raw = FALSE) {
 
 if(!dir.exists(paste0(getwd(),"/filtered"))) {
   dir.create(paste0(getwd(),"/filtered")) # create output directory if doesn't exist
@@ -37,20 +42,10 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
-
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
-      dat = readOGR(fname,"Broadcast")
-
-      # process the tables to extract vessel and voyage
-      if(.Platform$OS.type != "windows") {
-        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-      } else {
-        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-      }
-      vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
-      voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
+      dat = sf::st_read(dsn = fname, layer = "Broadcast", quiet = TRUE)
+      vessel = sf::st_read(dsn = fname, layer = "Vessel", quiet = TRUE)
+      voyage = sf::st_read(dsn = fname, layer = "Voyage", quiet = TRUE)
     }
     if(df$year[i] == 2010) {
       char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
@@ -59,19 +54,10 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
-      dat = readOGR(fname,"Broadcast", verbose=FALSE)
 
-      # process the tables to extract vessel and voyage
-      if(.Platform$OS.type != "windows") {
-        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-      }
-      else {
-        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-      }
-      vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
-      voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
+      dat = sf::st_read(dsn = fname, layer = "Broadcast", quiet = TRUE)
+      vessel = sf::st_read(dsn = fname, layer = "Vessel", quiet = TRUE)
+      voyage = sf::st_read(dsn = fname, layer = "Voyage", quiet = TRUE)
     }
     if(df$year[i] %in% c(2011,2012,2013)) {
       char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
@@ -79,36 +65,11 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
-      if(df$year[i] %in% c(2011,2012)) {
-        dat = readOGR(fname,"Broadcast", verbose=FALSE)
-        # process the tables to extract vessel and voyage
-        if(.Platform$OS.type != "windows") {
-          system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-          system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-        }
-        else {
-          shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," Vessel"))
-          shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," Voyage"))
-        }
-        vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
-        voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
-      }
-      if(df$year[i] == 2013) {
-        dat = readOGR(fname,paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Broadcast"), verbose=FALSE)
-        # process the tables to extract vessel and voyage
-        layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month)
 
-        if(.Platform$OS.type != "windows") {
-        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
-        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
-        }
-        else {
-        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
-        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
-        }
-        vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
-        voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
-      }
+      dat = sf::st_read(dsn = fname, layer = "Broadcast", quiet = TRUE)
+      vessel = sf::st_read(dsn = fname, layer = "Vessel", quiet = TRUE)
+      voyage = sf::st_read(dsn = fname, layer = "Voyage", quiet = TRUE)
+
     }
     if(df$year[i] == 2014) {
       char_month = ifelse(df$month[i] < 10, paste0("0",df$month[i]), paste0(df$month[i]))
@@ -116,19 +77,10 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
       unzip("temp.zip")
       fname = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,".gdb")
-      dat = readOGR(fname, paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Broadcast"), verbose=FALSE)
 
-      layername = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month)
-      if(.Platform$OS.type != "windows") {
-        system(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
-        system(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
-      }
-      else {
-        shell(paste0("ogr2ogr -f CSV Vessel.csv ",fname," ",layername,"_Vessel"))
-        shell(paste0("ogr2ogr -f CSV Voyage.csv ",fname," ",layername,"_Voyage"))
-      }
-      vessel = read.csv("Vessel.csv", stringsAsFactors = FALSE)
-      voyage = read.csv("Voyage.csv", stringsAsFactors = FALSE)
+      dat = sf::st_read(dsn = fname, layer = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Broadcast"), quiet = TRUE)
+      vessel = sf::st_read(dsn = fname, layer = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Vessel"), quiet = TRUE)
+      voyage = sf::st_read(dsn = fname, layer = paste0("Zone",df$zone[i],"_",df$year[i],"_",char_month,"_Voyage"), quiet = TRUE)
     }
     unlink("temp.zip")
 
