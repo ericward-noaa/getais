@@ -8,7 +8,7 @@ You can install the development version of the package with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("eric-ward/getais")
+devtools::install_github("ericward-noaa/getais")
 
 library(getais)
 ```
