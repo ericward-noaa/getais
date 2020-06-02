@@ -4,9 +4,15 @@
 \alias{downsample_ais}
 \title{Returns null, just processes data from web}
 \usage{
-downsample_ais(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9,
-  10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType",
-  "Length"), voyage_attr = c("Destination"), raw = FALSE)
+downsample_ais(
+  df,
+  every_minutes = 10,
+  status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15),
+  SOG_threshold = 1,
+  vessel_attr = c("VesselType", "Length"),
+  voyage_attr = c("Destination"),
+  raw = FALSE
+)
 }
 \arguments{
 \item{df}{The data frame consisting of the combinations of zones, years, months to process}

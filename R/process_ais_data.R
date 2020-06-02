@@ -5,7 +5,10 @@
 #' @param time_zone The time zone used in calculations (e.g. "GMT", "UTC")
 #'
 #' @return processed data frame
-#' @import PBSmapping, fields, dplyr
+#' @import PBSmapping
+#' @importFrom fields rdist.earth.vec
+#' @importFrom lubridate ymd_hms year month day hour minute second as_datetime
+#' @importFrom dplyr arrange group_by mutate filter select rename ungroup
 #' @export
 #' @examples
 #' \dontrun{
@@ -21,36 +24,36 @@ process_ais_data = function(aisdata, min_from_hr = 7.5, time_zone = "GMT") {
 
   aisdata$BaseDateTime = as.POSIXct(aisdata$BaseDateTime, tz = time_zone)
 
-  aisdata = arrange(aisdata, MMSI, BaseDateTime) %>%
-    group_by(MMSI) %>%
-    mutate(diff_time = c(NA, diff(BaseDateTime)) / (60*60),
+  aisdata = dplyr::arrange(aisdata, MMSI, BaseDateTime) %>%
+    dplyr::group_by(MMSI) %>%
+    dplyr::mutate(diff_time = c(NA, diff(BaseDateTime)) / (60*60),
       lon_lag = c(coords.x1[-1],NA),
       lat_lag = c(coords.x2[-1],NA),
-      diff_dist = rdist.earth.vec(cbind(coords.x1,coords.x2),
+      diff_dist = fields::rdist.earth.vec(cbind(coords.x1,coords.x2),
         cbind(lon_lag, lat_lag), miles=FALSE),
       speed_kmhr = diff_dist/diff_time)
 
   # remove minutes not within 7.5 min of hr.
   g = aisdata %>% ungroup %>%
-    mutate(mint = minute(as_datetime(aisdata$BaseDateTime, tz=time_zone)),
-      hourt = hour(as_datetime(aisdata$BaseDateTime, tz=time_zone)),
-      dayt = day(as_datetime(aisdata$BaseDateTime, tz=time_zone)),
-      montht = month(as_datetime(aisdata$BaseDateTime, tz=time_zone)),
-      yeart = year(as_datetime(aisdata$BaseDateTime, tz=time_zone))) %>%
-    filter(mint >= (60-min_from_hr) | mint < (min_from_hr)) %>%
-    mutate(time_id = paste(yeart,montht,dayt,hourt, sep="-")) %>%
-    select(-hourt, -dayt, -montht, -yeart) %>%
-    group_by(MMSI, time_id) %>%
-    mutate(speed_kmhr2 = sum(diff_dist, na.rm=T)/sum(diff_time, na.rm=T)) %>%
-    select(-COG, -Heading, -ROT, -ReceiverType, -ReceiverID, -keep, -mint) %>%
-    rename(X = coords.x1) %>%
-    rename(Y = coords.x2) %>%
-    filter(is.finite(speed_kmhr2)) %>%
-    filter(is.finite(speed_kmhr)) %>%
-    filter(!is.na(speed_kmhr2)) %>%
-    filter(!is.na(speed_kmhr))
+    dplyr::mutate(mint = lubridate::minute(as_datetime(aisdata$BaseDateTime, tz=time_zone)),
+      hourt = lubridate::hour(lubridate::as_datetime(aisdata$BaseDateTime, tz=time_zone)),
+      dayt = lubridate::day(as_datetime(aisdata$BaseDateTime, tz=time_zone)),
+      montht = lubridate::month(as_datetime(aisdata$BaseDateTime, tz=time_zone)),
+      yeart = lubridate::year(as_datetime(aisdata$BaseDateTime, tz=time_zone))) %>%
+    dplyr::filter(mint >= (60-min_from_hr) | mint < (min_from_hr)) %>%
+    dplyr::mutate(time_id = paste(yeart,montht,dayt,hourt, sep="-")) %>%
+    dplyr::select(-hourt, -dayt, -montht, -yeart) %>%
+    dplyr::group_by(MMSI, time_id) %>%
+    dplyr::mutate(speed_kmhr2 = sum(diff_dist, na.rm=T)/sum(diff_time, na.rm=T)) %>%
+    dplyr::select(-COG, -Heading, -ROT, -ReceiverType, -ReceiverID, -keep, -mint) %>%
+    dplyr::rename(X = coords.x1) %>%
+    dplyr::rename(Y = coords.x2) %>%
+    dplyr::filter(is.finite(speed_kmhr2)) %>%
+    dplyr::filter(is.finite(speed_kmhr)) %>%
+    dplyr::filter(!is.na(speed_kmhr2)) %>%
+    dplyr::filter(!is.na(speed_kmhr))
 
-  # convert to km
+  # convert to km in PBS mapping -- though this can be updated to use sp or sf
   g$PID = 1
   g$POS = seq(1, nrow(g))
   attr(g, "zone") = 10
@@ -58,7 +61,7 @@ process_ais_data = function(aisdata, min_from_hr = 7.5, time_zone = "GMT") {
   g = convUL(g, km = TRUE)
 
   g = g %>%
-    select(-PID, -POS)
+    dplyr::select(-PID, -POS)
 
   return(g)
 }

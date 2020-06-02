@@ -4,13 +4,15 @@
 \alias{acrossLand}
 \title{Return the index that there is no land between the vessel and the whale}
 \usage{
-acrossLand(df)
+acrossLand(df, map)
 }
 \arguments{
 \item{df}{The data frame that join whale and vessel together. Necessary variables: whale's loc (UTM), vessels'loc (UTM)}
+
+\item{map}{The map that will be used to test}
 }
 \value{
-index
+index that is not cross land
 }
 \description{
 Return the index that there is no land between the vessel and the whale

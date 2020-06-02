@@ -5,7 +5,7 @@
 #' @param depth The depth data include location (x,y) and depth (in meters)
 #' @param segment_length in km
 #'
-#'
+#' @importFrom dplyr filter mutate select arrange
 #' @return maximum depth for each whale & vessel pair
 #' @export
 maxDepth = function(df, map, depth, segment_length = 0.5) {
@@ -16,11 +16,11 @@ maxDepth = function(df, map, depth, segment_length = 0.5) {
   min_y = min(min(df$lat), min(df$Y))
 
   # make the depth data that is within 0.5km around whale&vessel
-  depth  = depth %>%
-    filter(x>= min_x*1000 - 500 & x<= max_x*1000 + 500) %>%
-    filter(y>= min_y*1000 - 500 & y<= max_y*1000 + 500) %>%
-    mutate(X = x/1000, Y = y/1000) %>%
-    select(X,Y,depth_m)
+  depth = depth %>%
+    dplyr::filter(x>= min_x*1000 - 500 & x<= max_x*1000 + 500) %>%
+    dplyr::filter(y>= min_y*1000 - 500 & y<= max_y*1000 + 500) %>%
+    dplyr::mutate(X = x/1000, Y = y/1000) %>%
+    dplyr::select(X,Y,depth_m)
 
   # store the maximum depth for each pair
   maxDepth = rep(NA,nrow(df))
@@ -44,15 +44,15 @@ maxDepth = function(df, map, depth, segment_length = 0.5) {
     ip_depth = rep(NA,nrow(pts))
     # shrink the depth data that is within 0.1km around whale & vessel
     depth_filter = depth %>%
-      filter(X>= min(pts$pts_x) - 0.1 & X<= max(pts$pts_x) + 0.1)%>%
-      filter(Y>= min(pts$pts_y) - 0.1 & Y<= max(pts$pts_y) + 0.1)
+      dplyr::filter(X>= min(pts$pts_x) - 0.1 & X<= max(pts$pts_x) + 0.1)%>%
+      dplyr::filter(Y>= min(pts$pts_y) - 0.1 & Y<= max(pts$pts_y) + 0.1)
     for(j in 1:nrow(pts)) {
       ## for every points on the line, find the four closest depth data
       four = depth_filter %>%
-        filter(X>= pts$pts_x[j] - 0.1 & X<= pts$pts_x[j] + 0.1) %>%
-        filter(Y>= pts$pts_y[j] - 0.1 & Y<= pts$pts_y[j] + 0.1) %>%
-        mutate(dis = sqrt((X-pts$pts_x[j])^2+(Y-pts$pts_y[j])^2)) %>%
-        arrange(dis)
+        dplyr::filter(X>= pts$pts_x[j] - 0.1 & X<= pts$pts_x[j] + 0.1) %>%
+        dplyr::filter(Y>= pts$pts_y[j] - 0.1 & Y<= pts$pts_y[j] + 0.1) %>%
+        dplyr::mutate(dis = sqrt((X-pts$pts_x[j])^2+(Y-pts$pts_y[j])^2)) %>%
+        dplyr::arrange(dis)
 
       if(nrow(four) >= 4) {
         if(sd(four$X[1:4]) < 0.005 | sd(four$Y[1:4]) < 0.005) { # if x or y is too close, just take the mean
@@ -98,24 +98,24 @@ maxDepth = function(df, map, depth, segment_length = 0.5) {
       ip_depth = rep(NA,nrow(pts))
       # shrink the depth data that is within 20 km around whale & vessel
       depth_filter = depth %>%
-        filter(X>= min(pts$pts_x) - 20 & X<= max(pts$pts_x) + 20 &
+        dplyr::filter(X>= min(pts$pts_x) - 20 & X<= max(pts$pts_x) + 20 &
                  Y>= min(pts$pts_y) - 20 & Y<= max(pts$pts_y) + 20)
       for(j in 1:nrow(pts)) {
         ## four closest pts
         four = depth_filter %>%
-          filter(X>= pts$pts_x[j] - 0.1 & X<= pts$pts_x[j] + 0.1) %>%
-          filter(Y>= pts$pts_y[j] - 0.1 & Y<= pts$pts_y[j] + 0.1) %>%
-          mutate(dis = sqrt((X-pts$pts_x[j])^2+(Y-pts$pts_y[j])^2)) %>%
-          arrange(dis)
+          dplyr::filter(X>= pts$pts_x[j] - 0.1 & X<= pts$pts_x[j] + 0.1) %>%
+          dplyr::filter(Y>= pts$pts_y[j] - 0.1 & Y<= pts$pts_y[j] + 0.1) %>%
+          dplyr::mutate(dis = sqrt((X-pts$pts_x[j])^2+(Y-pts$pts_y[j])^2)) %>%
+          dplyr::arrange(dis)
         width = 0.1
         # increase the width until have more than 4 rows.
         while(nrow(four) < 4) {
           width = width + 0.1
           four = depth_filter %>%
-            filter(X>= pts$pts_x[j] - width & X<= pts$pts_x[j] + width) %>%
-            filter(Y>= pts$pts_y[j] - width & Y<= pts$pts_y[j] + width) %>%
-            mutate(dis = sqrt((X-pts$pts_x[j])^2+(Y-pts$pts_y[j])^2)) %>%
-            arrange(dis)
+            dplyr::filter(X>= pts$pts_x[j] - width & X<= pts$pts_x[j] + width) %>%
+            dplyr::filter(Y>= pts$pts_y[j] - width & Y<= pts$pts_y[j] + width) %>%
+            dplyr::mutate(dis = sqrt((X-pts$pts_x[j])^2+(Y-pts$pts_y[j])^2)) %>%
+            dplyr::arrange(dis)
         }
         width_to_use[i] = width
 

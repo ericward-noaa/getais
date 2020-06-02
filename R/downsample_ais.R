@@ -10,12 +10,15 @@
 #'
 #' @return NULL
 #' @export
+#' @importFrom dplyr select group_by mutate filter
+#' @importFrom lubridate as_datetime round_date minute second month day
 #' @examples
 #' \dontrun{
 #' df = data.frame("month"=1:4, "year" = 2009, "zone"=10)
 #' downsample_ais(df, raw = TRUE) # gets raw data from marine cadastre
 #' }
-downsample_ais = function(df, every_minutes = 10, status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination"), raw = FALSE) {
+downsample_ais = function(df, every_minutes = 10,
+  status_codes_to_keep = c(0, 7, 8, 9, 10, 11, 12, 13, 14, 15), SOG_threshold = 1, vessel_attr = c("VesselType","Length"), voyage_attr = c("Destination"), raw = FALSE) {
 
 if(!dir.exists(paste0(getwd(),"/filtered"))) {
   dir.create(paste0(getwd(),"/filtered")) # create output directory if doesn't exist
@@ -133,8 +136,8 @@ for(i in 1:nrow(df)) {
     #dat = filter(as.data.frame(dat), SOG >= SOG_threshold) %>%
     #  filter(Status %in% status_codes_to_keep) %>%
     #  left_join(vessel[,c("MMSI",vessel_attr)])
-    dat = filter(as.data.frame(dat), SOG >= SOG_threshold) %>%
-      filter(Status %in% status_codes_to_keep)
+    dat = dplyr::filter(as.data.frame(dat), SOG >= SOG_threshold) %>%
+      dplyr::filter(Status %in% status_codes_to_keep)
 
     dat[,c(vessel_attr)] = vessel[match(dat$MMSI, vessel$MMSI),c(vessel_attr)]
 
@@ -144,13 +147,13 @@ for(i in 1:nrow(df)) {
     dat[,c(voyage_attr)] = voyage[match(dat$MMSI, voyage$MMSI),c(voyage_attr)]
     unlink("Voyage.csv")
 
-    dat$BaseDateTime = as_datetime(as.POSIXlt(as.character(dat$BaseDateTime)))
+    dat$BaseDateTime = lubridate::as_datetime(as.POSIXlt(as.character(dat$BaseDateTime)))
     dat$keep = 0
 
     if(raw == FALSE) {
-    dat$BaseDateTime_round = round_date(dat$BaseDateTime, "minute")
+    dat$BaseDateTime_round = lubridate::round_date(dat$BaseDateTime, "minute")
 
-    dat$minutes = minute(dat$BaseDateTime_round) + second(dat$BaseDateTime)/60
+    dat$minutes = lubridate::minute(dat$BaseDateTime_round) + lubridate::second(dat$BaseDateTime)/60
     seq_min = seq(0, 60, by = every_minutes)
     seq_min[1] = -1 # catch against 00:00:00 throwing error
     dat$time_chunk = as.numeric(cut(dat$minutes, seq_min))
@@ -162,14 +165,14 @@ for(i in 1:nrow(df)) {
     dat = select(dat, -BaseDateTime_round, -minutes, -time_chunk, -diff_1, -diff_2, -time_1)
 
     # create interval: month: day to group_by on
-    dat$chunk = as.numeric(as.factor(paste0(month(dat$BaseDateTime),":",day(dat$BaseDateTime),":",dat$interval)))
+    dat$chunk = as.numeric(as.factor(paste0(lubridate::month(dat$BaseDateTime),":",lubridate::day(dat$BaseDateTime),":",dat$interval)))
     dat$BaseDateTime = as.character(dat$BaseDateTime) # needed to keep dplyr from throwing error
 
-    dat = group_by(dat, MMSI, chunk) %>%
-      mutate(mintime = ifelse(min_timediff == min(min_timediff), 1, 0)) %>%
-      filter(mintime == 1) %>%
+    dat = dplyr::group_by(dat, MMSI, chunk) %>%
+      dplyr::mutate(mintime = ifelse(min_timediff == lubridate::min(min_timediff), 1, 0)) %>%
+      dplyr::filter(mintime == 1) %>%
       ungroup %>%
-      select(-mintime, -chunk, -keep)
+      dplyr::select(-mintime, -chunk, -keep)
     }
 
     if(nrow(dat) > 0) {

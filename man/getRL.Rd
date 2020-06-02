@@ -4,12 +4,16 @@
 \alias{getRL}
 \title{Returns a dataframe that includes date, Received Level(dB) and location of the whale}
 \usage{
-getRL(whale, vessel)
+getRL(whale, vessel, map, depth)
 }
 \arguments{
 \item{whale}{The data frame include date(PST), position(UTM) of the whale}
 
 \item{vessel}{The data frame include date(PST), position(UTM) of the vessel}
+
+\item{map}{The map around whale and vessel}
+
+\item{depth}{The depth data include location (x,y) and depth (in meters)}
 }
 \value{
 dataframe
