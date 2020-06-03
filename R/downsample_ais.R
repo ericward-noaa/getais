@@ -11,8 +11,8 @@
 #' @return NULL
 #' @export
 #' @importFrom sf st_read
-#' @importFrom magrittr "%>%"
-#' @importFrom dplyr select group_by mutate filter
+#' @import dplyr
+#' @importFrom magrittr %>%
 #' @importFrom lubridate as_datetime round_date minute second month day
 #' @examples
 #' \dontrun{
