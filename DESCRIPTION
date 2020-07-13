@@ -14,5 +14,8 @@ Imports:
     dplyr,
     lubridate,
     fields,
-    PBSmapping
+    PBSmapping,
+    Rcpp
 RoxygenNote: 7.1.0
+LinkingTo: 
+    Rcpp
