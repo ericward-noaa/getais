@@ -96,8 +96,13 @@ for(i in 1:nrow(df)) {
 
       url = paste0("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/",df$year[i],"/AIS_",df$year[i],"_",char_month,"_Zone",char_zone,".zip")
       download.file(url, destfile = "temp.zip", quiet=TRUE)
+
       unzip("temp.zip")
-      fname = paste0("AIS_ASCII_by_UTM_Month/",df$year[i],"/AIS_",df$year[i],"_",char_month,"_Zone",char_zone,".csv")
+      if(df$year!="2017") {
+        fname = paste0("AIS_ASCII_by_UTM_Month/",df$year[i],"/AIS_",df$year[i],"_",char_month,"_Zone",char_zone,".csv")
+      } else {
+        fname = paste0("AIS_ASCII_by_UTM_Month/",df$year[i],"_v2/AIS_",df$year[i],"_",char_month,"_Zone",char_zone,".csv")
+      }
       dat = read.csv(file = fname,
         stringsAsFactors = FALSE)
     }
