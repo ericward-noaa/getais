@@ -98,11 +98,9 @@ for(i in 1:nrow(df)) {
       download.file(url, destfile = "temp.zip", quiet=TRUE)
 
       unzip("temp.zip")
-      if(df$year!="2017") {
+      #if(df$year!="2017") {
         fname = paste0("AIS_ASCII_by_UTM_Month/",df$year[i],"/AIS_",df$year[i],"_",char_month,"_Zone",char_zone,".csv")
-      } else {
-        fname = paste0("AIS_ASCII_by_UTM_Month/",df$year[i],"_v2/AIS_",df$year[i],"_",char_month,"_Zone",char_zone,".csv")
-      }
+      #}
       dat = read.csv(file = fname,
         stringsAsFactors = FALSE)
     }
@@ -127,25 +125,35 @@ for(i in 1:nrow(df)) {
 
     }
 
-    dat$BaseDateTime = lubridate::as_datetime(as.POSIXlt(as.character(dat$BaseDateTime)))
+    dat$BaseDateTime = lubridate::as_datetime(dat$BaseDateTime)
     dat$keep = 0
 
     if(raw == FALSE) {
+      # round the time to nearest minute
       dat$BaseDateTime_round = lubridate::round_date(dat$BaseDateTime, "minute")
 
       dat$minutes = lubridate::minute(dat$BaseDateTime_round) + lubridate::second(dat$BaseDateTime)/60
       seq_min = seq(0, 60, by = every_minutes)
       seq_min[1] = -1 # catch against 00:00:00 throwing error
       dat$time_chunk = as.numeric(cut(dat$minutes, seq_min))
+      # calculate difference between time stamp and minutes rounded down and minutes rounded up
       dat$diff_1 = abs(dat$minutes - seq_min[dat$time_chunk])
       dat$diff_2 = abs(dat$minutes - seq_min[dat$time_chunk+1])
+      # indicator for whether time stamp is closer to lower (diff_1) or upper bound (diff_2)
       dat$time_1 = ifelse(dat$diff_1 < dat$diff_2, 1, 0)
-      dat$min_timediff = dat$diff_1 * dat$time_1 + (1-dat$time_1)*dat$diff_2
-      dat$interval = dat$time_chunk * dat$time_1 + (1-dat$time_1)* (dat$time_chunk+1)
+      dat$min_timediff = dat$diff_1 * dat$time_1 + (1-dat$time_1)*dat$diff_2  # calculate the smallest of the 2 values
+      # the time_chunk here is really the interval that the timestamp falls into, and the dat$interval is which of the
+      # breaks the time stamp is closest to
+      dat$interval = dat$time_chunk * dat$time_1 + (1-dat$time_1)* (dat$time_chunk+1) # similarly assign the chunk --
+
+      # also need to catch case where redundant
+      # or which of the breaks this is closest to
       dat = select(dat, -BaseDateTime_round, -minutes, -time_chunk, -diff_1, -diff_2, -time_1)
 
-      # create interval: month: day to group_by on
-      dat$chunk = as.numeric(as.factor(paste0(lubridate::month(dat$BaseDateTime),":",lubridate::day(dat$BaseDateTime),":",dat$interval)))
+      # create interval: month: day to group_by on -- this is month:day:hour:interval
+      chunk_fac = as.factor(paste0(lubridate::month(dat$BaseDateTime),":",
+        lubridate::day(dat$BaseDateTime),":",lubridate::hour(dat$BaseDateTime),":",dat$interval))
+      dat$chunk = as.numeric(chunk_fac)
       dat$BaseDateTime = as.character(dat$BaseDateTime) # needed to keep dplyr from throwing error
 
       dat = dplyr::group_by(dat, MMSI, chunk) %>%
