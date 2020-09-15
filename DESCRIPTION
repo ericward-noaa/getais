@@ -2,7 +2,11 @@ Package: getais
 Type: Package
 Title: This Package Processes AIS Data
 Version: 0.2.0
-Author: Eric Ward
+Authors@R: c(
+    person(c("Eric", "J."), "Ward", role = c("aut", "cre"), 
+      email = "eric.ward@noaa.gov"),
+    person("Owen", "Liu", role = "aut"),
+    person("Olin", "Feist", role = "aut"))
 Maintainer: The package maintainer <eric.ward@noaa.gov>
 Description: Downloads and processes AIS data, subsetting observations closest to user-specified times.
 License: GPL (>=3)
